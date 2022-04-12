@@ -1,0 +1,39 @@
+@layout('layouts/main')
+
+@section('content')
+<h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+  Dados do Usuário
+</h4>
+<div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  @!form.input({
+  label: 'Email',
+  placeholder:'Email',
+  name: 'email',
+  type: 'email',
+  value: email,
+  })
+</div>
+
+<h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+  Acesso da API
+</h4>
+<div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+  <label class="block mt-4 text-sm">
+    <span class="text-gray-700 dark:text-gray-400">
+      Token
+    </span>
+    <form action="{{ route('users.token') }}" method="POST">
+      <div class="relative text-gray-500 focus-within:text-purple-600">
+        <input type="text"
+          class="block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+          placeholder="key"
+          value="{{ token }}" />
+        <button
+          class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-r-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          Gerar nova chave
+        </button>
+      </div>
+    </form>
+  </label>
+</div>
+@endsection

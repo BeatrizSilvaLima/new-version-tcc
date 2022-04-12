@@ -1,0 +1,46 @@
+@set('variants', {
+    base: 'text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple hover:bg-brand-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-700 shadow hover:shadow-lg ease-in-out',
+    white: 'text-black bg-white active:bg-gray-100 hover:bg-gray-200 focus:shadow-outline-purple transition-colors duration-150 border border-transparent rounded-lg focus:outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-700 shadow hover:shadow-lg ease-in-out',
+  })
+  
+  @set('sizes', {
+    lg: 'px-4 py-2 text-lg',
+    base: 'px-6 py-2',
+    xs: 'px-2.5 py-1.5 text-xs',
+    sm: 'px-3 py-2 text-sm'
+  })
+  
+  @set('sizeClass', (s) => sizes[s || 'base'])
+  @set('variantClass', (v) => variants[v || 'base'])
+  @set('displayClass', block ? 'flex w-full justify-center' : 'inline-flex')
+  
+  @if(!href)
+    <button
+      {{ id ? `id=${id}` : '' }}
+      {{ onclick ? `onclick=${onclick}` : '' }}
+      type="{{ type || 'button' }}"
+      class="
+        {{ sizeClass(size) }}
+        {{ variantClass(variant) }}
+        {{ className || '' }}
+        {{ disabled ? 'bg-gray-200 text-gray-400 hover:bg-gray-200 hover:text-gray-400 focus:bg-gray-200 focus:text-gray-400' : '' }}
+        {{ displayClass }} items-center rounded transition duration-300
+      "
+      {{ disabled ? 'disabled=disabled' : '' }}
+      {{ form ? `form=${form}` : '' }}>
+      {{{ await $slots.main() }}}
+    </button>
+  @else
+    <a
+      {{ id ? `id=${id}` : '' }}
+      {{ disabled ? '' : `href=${href}` }}
+      class="
+        {{ sizeClass(size) }}
+        {{ variantClass(variant) }}
+        {{ className || '' }}
+        {{ disabled ? "bg-gray-200 text-gray-400 hover:bg-gray-200 hover:text-gray-400 focus:bg-gray-200 focus:text-gray-400" : "" }}
+        {{ displayClass }} items-center rounded transition duration-300
+      ">
+      {{{ await $slots.main() }}}
+    </a>
+  @endif

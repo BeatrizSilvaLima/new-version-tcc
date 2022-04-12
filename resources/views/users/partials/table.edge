@@ -1,0 +1,119 @@
+@set('pageStartCount', users.currentPage === users.firstPage ? 1 : users.currentPage * users.perPage)
+@set('pageEndCount', users.currentPage === users.lastPage ? users.totalNumber : users.currentPage * users.perPage + users.perPage)
+
+<table class="w-full whitespace-no-wrap">
+  <thead>
+    <tr
+      class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+      <th class="px-4 py-3">Email</th>
+      <th class="px-4 py-3">Está ativo?</th>
+      <th class="px-4 py-3">É admin?</th>
+      <th class="px-4 py-3"></th>
+    </tr>
+  </thead>
+  <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+    @each(user in users)
+      <tr class="text-gray-700 dark:text-gray-400">
+        <td class="px-4 py-3">
+          <div class="flex items-center text-sm">
+            <!-- Avatar with inset shadow -->
+            <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+              <img class="object-cover w-full h-full rounded-full"
+                src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+                alt="" loading="lazy" />
+              <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+            </div>
+            <div>
+              <p class="font-semibold {{ rarityClass }}">
+                <a href="{{ route('users.show', { id: user.id }) }}">
+                  {{ user.email }}
+                </a>
+              </p>
+            </div>
+          </div>
+        </td>
+        <td class="px-4 py-3 text-xs">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </td>
+        <td class="px-4 py-3 text-xs">
+          <div class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg focus:outline-none focus:shadow-outline-gray">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+        </td>
+        <td class="px-4 py-3">
+          <div class="flex items-center space-x-4 text-sm">
+            <button
+              class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg focus:outline-none focus:shadow-outline-gray"
+              aria-label="Visualizar">
+              <a href="#">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+              </a>
+            </button>
+            <button
+              class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg focus:outline-none focus:shadow-outline-gray"
+              aria-label="Editar">
+              <a href="#">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+              </a>
+            </button>
+            <button
+              class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg focus:outline-none focus:shadow-outline-gray"
+              aria-label="Deletar">
+              <a href="#">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </a>
+            </button>
+          </div>
+        </td>
+      </tr>
+    @endeach
+  </tbody>
+</table>
+
+<div
+class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+  <span class="flex items-center col-span-3">
+    Showing {{ `${pageStartCount}-${pageEndCount} of ${users.total}` }}
+  </span>
+  <span class="col-span-2"></span>
+  <!-- Pagination -->
+  <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+    <nav aria-label="Table navigation">
+      <ul class="inline-flex items-center">
+        <li>
+          <button class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
+            aria-label="Previous">
+            <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd" fill-rule="evenodd"></path>
+            </svg>
+          </button>
+        </li>
+        @each(anchor in users.getUrlsForRange(1, users.lastPage))
+          <li>
+            @if (anchor.page !== users.currentPage)
+              <a href="{{ anchor.url.substring(1) }}" class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                {{ anchor.page }}
+              </a>
+            @else
+              <p class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                {{ anchor.page }}
+              </p>
+            @endif
+          </li>
+        @endeach
+        <li>
+          <button class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+            aria-label="Next">
+            <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
+              <path
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd" fill-rule="evenodd"></path>
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </span>
+</div>

@@ -1,0 +1,11 @@
+<form   {{ id ? `id=${id}` : '' }}
+        action="{{ action }}"
+        method="{{ method ?? 'POST' }}"
+        {{{ className ? `class="${className}"` : '' }}}>
+    
+    {{ csrfField() }}
+
+    @if ($slots.main)
+        {{{ await $slots.main() }}}
+    @endif
+</form>

@@ -1,0 +1,89 @@
+@layout('layouts/main')
+
+@set('title', skill?.id ? 'Atualizando Habilidade' : 'Criando uma Habilidade' )
+@set('subtitle', 'Deverá colocar os dados da máquina que servirá de API.')
+@set('navigation', 'Habilidade')
+@set('idForm', 'skillForm')
+
+@set('action', route('skills.store'))
+
+@section('heading')
+    @button({ href: route('skills.index'), variant: 'white' })
+        @!svg.arrowLeft({ classes: 'h-4 mr-1'})
+        Cancelar
+    @end
+    @button({ form: idForm, type: 'submit' })
+        @!svg.saveAs({ classes: 'h-4 mr-1'})
+        Salvar
+    @end
+@endsection
+
+@section('content')
+
+    @form({
+        action: action,
+        id: idForm
+    })
+        @if(skill?.id)
+            <input type="hidden" name="id" value="{{ skill?.id }}" />
+        @endif
+
+        @component('components/fieldset')
+            @!form.input({
+                label: 'Nome',
+                placeholder:'Nome da Habilidade',
+                name: 'name',
+                type: 'text',
+                value: skill?.name ? skill?.name : ''
+            })
+
+            <label class="block mt-4 text-sm">
+                <span class="text-gray-700">
+                    Perfis
+                </span>
+                <select class="block w-full mt-1 text-sm form-multiselect focus:border-purple-400 focus:outline-none focus:shadow-outline-purple" multiple="">
+                <option>Administrador</option>
+                <option>NLP</option>
+                <option>Machine Learning</option>
+                <option>Capivara</option>
+                </select>
+            </label>
+
+            @!form.input({
+                label: 'Path',
+                placeholder:'Path',
+                name: 'path',
+                type: 'text',
+                value: skill?.path ? skill?.path : ''
+            })
+        @end
+
+        @component('components/fieldset', {
+            title: 'Configurações do Servidor'
+        })
+            @!form.input({
+                label: 'Host',
+                placeholder:'Host',
+                name: 'server_host',
+                type: 'text',
+                value: skill?.serverHost ? skill?.serverHost : ''
+            })
+
+            @!form.input({
+                label: 'Port',
+                placeholder:'Port',
+                name: 'server_port',
+                type: 'number',
+                value: skill?.serverPort ? skill?.serverPort : ''
+            })
+
+            @!form.input({
+                label: 'Path',
+                placeholder:'Path',
+                name: 'server_path',
+                type: 'text',
+                value: skill?.name ? skill?.serverPath : ''
+            })
+        @end
+    @end
+@endsection

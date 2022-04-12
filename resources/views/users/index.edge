@@ -1,0 +1,67 @@
+@layout('layouts/main')
+
+@set('title', 'Usuários')
+@set('subitle', 'Listando todos os usuários do sistema')
+@set('navigation', 'Usuários')
+
+@section('heading')
+    @button({ href: '#' })
+        @!svg.plus({ classes: 'h-4 mr-1'})
+        Usuário
+    @end
+@endsection
+
+@section('content')
+
+  @table.base({
+    data: users,
+    columns: [
+      { name: 'Email', field: 'email', witdh: 1000},
+      { name: 'Está ativo?', field: 'active' },
+      { name: 'É admin?', field: 'admin' },
+      { name: '', field: '_actions' }
+    ]
+  })
+    @slot('tableData', scope)
+      @if (scope.column.field === 'email')
+        <div class="flex items-center text-sm">
+          <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+            <img class="object-cover w-full h-full rounded-full"
+              src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+              alt="" loading="lazy" />
+            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+          </div>
+          <div>
+            <p class="font-semibold {{ rarityClass }}">
+              <a href="{{ route('users.show', { id: scope.row.id }) }}">
+                {{ scope.row[scope.column.field] }}
+              </a>
+            </p>
+          </div>
+        </div>
+      @elseif (scope.column.field === 'active')
+        <div class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg focus:outline-none focus:shadow-outline-gray">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+      @elseif (scope.column.field === 'admin')
+        <div class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg focus:outline-none focus:shadow-outline-gray">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+      @elseif (scope.column.field === '_actions')
+      <div class="flex text-sm">
+        <a href="#" class="text-gray-950 hover:text-brand-800 mr-3">
+          Editar
+        </a>
+        <form method="POST" action="#">
+          <button type="submit" class="text-red-800 hover:text-red-900">
+            Deletar
+          </button>
+        </form>
+      </div>
+      @else
+        <span class="text-sm">{{ scope.row[scope.column.field] }}</span>
+      @endif
+    @endslot
+  @end
+
+@endsection

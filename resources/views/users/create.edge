@@ -1,0 +1,78 @@
+@layout('layouts/simple')
+
+@section('home')
+<div class="flex items-center min-h-screen p-6 bg-gray-50">
+  <div class="flex-1 h-full max-w-6xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
+    <div class="flex flex-col overflow-y-auto md:flex-row">
+      <div class="h-32 md:h-auto hidden md:block md:w-1/2 bg-center">
+        <a href="{{ route('home') }}">
+          <img class="w-full h-full mg-20 md:w-4/5 z-30 mx-12"
+            src="{{ asset('assets/images/create_account.svg') }}" />
+        </a>
+      </div>
+      <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+        @form({
+          action: route('users.store'),
+          className: 'w-full'
+        })
+          <h1 class="mb-4 text-xl font-semibold text-gray-700">
+            Crie sua conta
+          </h1>
+
+          @!form.input({
+            label: 'Email',
+            placeholder:'Email',
+            name: 'email',
+            type: 'email',
+          })
+
+          @!form.input({
+            label: 'User Name',
+            placeholder:'JoaoAntonio',
+            name: 'userName',
+            type: 'text',
+          })
+
+          @!form.input({
+            label: 'Senha',
+            placeholder:'Senha',
+            name: 'password',
+            type: 'password',
+          })
+
+          @!form.input({
+            label: 'Confirme a sua senha',
+            placeholder:'Confirme a sua senha',
+            name: 'password_confirmation',
+            type: 'password',
+          })
+
+          @form.checkbox({
+            name: 'terms'
+          })
+            Li e concordo com os  
+            <span class="underline">Termos e Condições e a Política de Privacidade</span>
+            </span>
+          @end
+
+          @button({
+            type: 'submit',
+            block: true
+          })
+            Criar conta
+          @end
+
+          <hr class="my-8" />
+
+          <p class="mt-4">
+            <a class="text-sm font-medium text-purple-600 hover:underline" href="{{ route('sessions.create') }}">
+              Você já possui uma conta? Faça o login
+            </a>
+          </p>
+        @end
+      </div>
+    </div>
+  </div>
+</div>
+
+@endsection

@@ -1,0 +1,41 @@
+@set('classes', classes || 'rounded-md block w-full mt-1 text-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-input')
+
+<label class="block mt-2 mb-2 text-sm">
+  @if(label)
+    <span class="text-gray-700">
+      {{ label }}
+    </span>
+  @endif
+
+  <input
+    type={{ type }}
+
+    class="{{ classes }}
+    @if(flashMessages.has(`errors.${name}`))
+    border-red-500
+    @endif
+    "
+    placeholder="{{ placeholder || '' }}"
+    value="{{ value || '' }}"
+    id="{{ id || name }}"
+    name="{{ name }}"
+    required="{{ required }}"
+
+    @if(style)
+      style="{{ style }}"
+    @endif
+    />
+
+    @if(hint && !error)
+      <span class="text-xs text-gray-600">
+        {{ hint }}
+      </span>
+    @endif
+
+    @if(flashMessages.has(`errors.${name}`))
+      <span class="text-xs text-red-600">
+        {{ flashMessages.get(`errors.${name}`) }}
+      </span>
+    @endif
+
+</label>

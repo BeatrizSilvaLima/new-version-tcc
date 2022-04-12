@@ -1,0 +1,92 @@
+@set('isPaginated', Array.isArray(data?.rows) && data.currentPage)
+@set('rows', isPaginated ? data.rows : data)
+
+@set('alignments', {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right'
+})
+
+<div class="flex bg-gray-50 mb-8">
+    <div class="flex-1 max-w-1xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
+
+        <table class="w-full whitespace-no-wrap">
+            @if ($slots.thead || columns?.length)
+                <thead>
+                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
+                        @if (columns?.length)
+                            @each(column in columns)
+                                <th {{{ column.width ? `style="width: ${column.width}"` : ''}}}
+                                class="px-4 py-3
+                                {{ alignments[column.align ?? 'left'] }}
+                                {{ column.className ?? '' }}">
+                                {{ column.name }}
+                                </th>
+                            @endeach
+                        @else
+                            {{{ await $slots.thead() }}}
+                        @endif
+                    </tr>
+                </thead>
+            @endif
+            <tbody class="bg-white">
+                @if (rows?.length)
+                    @each(row in rows)
+                        @if (row.messages?.length)
+                        <tr @click="toggleMonitoredDropdown('{{ row.id }}')">
+                        @else
+                        <tr>
+                        @endif
+                        @if (columns?.length)
+                            @each(column in columns)
+                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                {{{ await $slots.tableData({ row, column }) }}}
+                            </td>
+                            @endeach
+                        @elseif ($slots.row)
+                            {{{ await $slots.row() }}}
+                        @endif
+                        </tr>
+                        @if (row.messages?.length)
+                        <template x-if="isMonitoredsDropdownOPen['{{ row.id }}']"> 
+                            <tr
+                            x-transition:enter="transition-all ease-in-out duration-300" x-transition:enter-start="opacity-25 max-h-0"
+                            x-transition:enter-end="opacity-100 max-h-xl" x-transition:leave="transition-all ease-in-out duration-300"
+                            x-transition:leave-start="opacity-100 max-h-xl" x-transition:leave-end="opacity-0 max-h-0"
+                            > 
+                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" colspan="4">
+                                <table class="w-full whitespace-no-wrap">
+                                    <tbody class="bg-white">
+                                        @each(message in row.messages)
+                                        <tr> 
+                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" colspan="3"> {{ message.message }} </td>
+                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" colspan="1"> </td>
+                                        </tr>
+                                    @endeach
+
+                                    </tbody>
+                                </table>
+                            </td>
+    
+                            </tr>
+
+                        </template>
+                        @endif
+                    @endeach
+                @elseif ($slots.tbody)
+                    {{{ await $slots.tbody() }}}
+                @else
+                    <tr>
+                        <td colspan="{{ columns.length ? columns.length : 1 }}" class="text-center">
+                            @!component('components/table/empty')
+                        </td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+
+        @if (isPaginated)
+        @!table.pagination({ data })
+        @endif
+    </div>
+</div>

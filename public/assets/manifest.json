@@ -1,0 +1,9 @@
+{
+  "assets/app.css": "http://localhost:8080/assets/app.css",
+  "assets/app.js": "http://localhost:8080/assets/app.js",
+  "assets/images/hero.svg": "http://localhost:8080/assets/images/hero.50d03be1.svg",
+  "assets/images/development.svg": "http://localhost:8080/assets/images/development.1bc5767f.svg",
+  "assets/images/artificial_intelligence.svg": "http://localhost:8080/assets/images/artificial_intelligence.325f4d2a.svg",
+  "assets/images/create_account.svg": "http://localhost:8080/assets/images/create_account.c96fb1ef.svg",
+  "assets/images/login.svg": "http://localhost:8080/assets/images/login.a2815a96.svg"
+}

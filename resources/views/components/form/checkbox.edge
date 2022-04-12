@@ -1,0 +1,18 @@
+<div class="flex mt-5 mb-5 text-sm">
+    <label class="flex items-center">
+        <input type="checkbox" name="{{ name }}"
+        class="form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple
+        @if(flashMessages.has(`errors.${name}`))
+            border-red-500
+        @endif
+        ">
+        <span class="ml-2
+        @if(flashMessages.has(`errors.${name}`))
+            text-red-500
+        @endif
+        ">
+            @if ($slots.main)
+                {{{ await $slots.main() }}}
+            @endif
+    </label>
+</div>

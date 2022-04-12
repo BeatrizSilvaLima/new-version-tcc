@@ -1,0 +1,12 @@
+<div class="breadcrumbs">
+  @each((value, index) in values)
+    @if(value.url)
+     <a href="{{ route(value.url) }}">{{value.name}}</a>
+    @else
+      {{value.name}}
+    @endif
+    @if(index < values.length - 1)
+      @!svg.chevronRight()
+    @endif
+  @endeach
+</div>
