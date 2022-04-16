@@ -6,14 +6,26 @@ import Message from "App/Models/Message";
 import natural from "natural";
 
 class MonitoredService {
-  public static async postFollow({ request, session }) {
+  public static async postFollow({ request, session, auth }) {
+
+    const monitored = await Monitored.query().where('user_name','=',request.all().userName).andWhere('social_media', '=', request.all().socialMedia)
+
+    if(monitored.length) {
+      await monitored[0].related('user').sync({
+        [auth.user.id]: {
+          active: true
+        }
+      }, false)
+
+      return;
+    }
+
     request.all().monitoredId = await TwitterService.getUser(request.all().userName)
     const postSchema = schema.create({
       monitoredId: schema.number([
         rules.unique({
           table: 'monitoreds',
-          column: 'monitored_id',
-          where: { active: true, monitor_id: request.all().monitorId },
+          column: 'external_id',
         }),
         rules.required(),
       ]),
@@ -31,15 +43,22 @@ class MonitoredService {
     } catch (error) {
       session.flash('message', error.messages)
     }
-    delete request.all()._csrf
-    await Monitored.updateOrCreate(
+    await (await Monitored.updateOrCreate(
       {
-        monitoredId: request.all().monitoredId,
-        monitorId: request.all().monitorId,
+        externalId: request.all().monitoredId,
         socialMedia: request.all().socialMedia,
       },
-      request.all()
-    )
+      {
+        externalId: request.all().monitoredId,
+        socialMedia: request.all().socialMedia,
+        userName: request.all().userName,
+      }
+    )).related('user').sync({
+      [auth.user.id]: {
+        active: true
+      }
+    }, false)
+    
   }
   public static async updateFilter({request, auth}) {
     const teste = await Database.query()
@@ -50,46 +69,109 @@ class MonitoredService {
     return teste
   }
   public static async getFollow({ auth }) {
-    const monitored = await Database.query()
+    const rawMonitored = await Monitored.query().select('*').preload('user').whereHas('user', query => {
+      query.where('user_id', '=', auth.user.id).andWhere('active', '=', true)
+    })
+
+    const monitored = rawMonitored.map((item) => {
+      return {
+        id: item.id,
+        userName: item.userName,
+        socialMedia: item.socialMedia,
+        userId: item.$preloaded.user[0].$attributes.id
+
+      }
+    })
+    /*const monitored = await Database.query()
       .select('*')
       .from('monitoreds')
       .where('monitor_id', '=', auth.user.id)
-      .andWhere('active', '=', true)
+      .andWhere('active', '=', true)*/
     return monitored
   }
-  public static async getAllFollowed() {
-    const monitored = await Database.query()
+  public static async getAllFollowed(socialMedia) {
+    const monitored = await Monitored.query().select(['external_id','last_message_id','social_media','id','user_name']).preload('user').distinct(['external_id', 'social_media']).whereHas('user', query => {
+      query.where('active', '=', true)
+    }).where('social_media', '=', socialMedia)
+
+    monitored.map((item) => {
+      return {
+        id: item.id,
+        userName: item.userName,
+        socialMedia: item.socialMedia,
+        userId: item.$preloaded.user[0].$attributes.id
+
+      }
+    })
+    /*const monitored = await Database.query()
       .select(['monitored_id','last_message_id','monitor_id','social_media','id','user_name'])
       .from('monitoreds')
-      .where('active', '=', true)
+      .where('active', '=', true)*/
     return monitored
   }
 
   public static async stopFollow({ request, auth }) {
-    const monitored = await Database.query()
-      .update({active:false, last_message_id:null}, ['monitored_id', 'active'])
-      .from('monitoreds')
-      .where('monitor_id', '=', auth.user.id)
-      .andWhere('monitored_id', '=', request.all().monitoredId)
-    return monitored
+    await (await Monitored.query().select().where('id', '=', request.all().monitoredId).andWhereHas('user', query => {
+      query.where('user_id', '=', auth.user.id).andWhere('active', '=', true)}))[0]
+      .related('user').sync({
+      [auth.user.id]: {
+        active: false
+      }
+    }, false)
+  }
+
+  public static async checkMessages({request, auth}) {
+
+    await (await Message.query().select().where('id', '=', request.all().messageId).andWhereHas('users', query => {
+      query.where('user_id', '=', auth.user.id)}))[0]
+      .related('users').sync({
+      [auth.user.id]: {
+        checked: true
+      }
+    }, false)
+
   }
 
   public static async refreshTweets({auth}) {
     const monitoredList = await this.getFollow({auth})
-    console.log(monitoredList)
     const monitoredId = monitoredList.map(function(monitored){
       return monitored.id
     })
-    const messages = await Database.query().select('*').from('messages').where('monitored_id','IN',monitoredId).orderBy('monitored_id', 'asc').orderBy('id_conversation', 'asc').orderBy('id_message', 'asc')
+    //const messages = await Database.query().select('*').from('messages').where('monitored_id','IN',monitoredId).orderBy('monitored_id', 'asc').orderBy('id_conversation', 'asc').orderBy('id_message', 'asc')
+
+    const rawMessages = await Message.query().select('*').preload('users').whereHas('users', query => {
+      query.where('user_id', '=', auth.user.id).andWhere('alert', '=', true).andWhere('checked', '=', false)
+    }).andWhereHas('monitoreds', query => {
+      query.where('id', 'in', monitoredId)
+    })
+
+
+    const messages = rawMessages.map((item) => {
+      return {
+        id: item.id,
+        monitoredId: item.monitoredId,
+        text: item.text,
+        idConversation: item.idConversation,
+        idRelatedMessage: item.idRelatedMessage,
+        externalId: item.externalId,
+        idAuthor: item.idAuthor,
+        authorName: item.authorName,
+        alert: item.users[0].$extras.pivot_alert,
+        checked: item.users[0].$extras.pivot_checked,
+        userId: item.users[0].$extras.pivot_user_id
+      }
+    })
 
     for (const followed of monitoredList) {
-      followed.messages = [];
+      followed['messages'] = [];
       for (const message of messages) {
-        if (message.monitored_id == followed.id) {
-          followed.messages.push(message);
+        if (message.monitoredId == followed.id) {
+          followed['messages'].push(message);
         }
       }
     }
+
+    //console.log(monitoredList);
 
     return monitoredList
   }
@@ -115,41 +197,40 @@ class MonitoredService {
   }
 
   public static async storeTweets() {
-    const monitoredList = await this.getAllFollowed()
+    const monitoredList = await this.getAllFollowed('twitter')
     let tweetList : Array<any> = []
     if(monitoredList) {
       for (const monitored of monitoredList) {
-        let tweetListRaw = await TwitterService.getTweets(monitored)
+        let tweetListRaw = await TwitterService.getTweets(monitored.$attributes)
         let meta = tweetListRaw.meta
         if (meta.result_count > 0) {
           for (const data of tweetListRaw.data) {
             let tweet = {
               //alert: await this.availingMessage({message:data.text,id:monitored.monitor_id}),
-              alert: false,
-              message: data.text,
+              text: data.text,
               idConversation: data.conversation_id,
-              idMessage: data.id,
+              externalId: data.id,
               idAuthor: data.author_id,
-              authorName: monitored.monitored_id == data.author_id ? monitored.user_name : await TwitterService.getUsernameById(data.author_id),
+              authorName: monitored.$attributes.external_id == data.author_id ? monitored.$attributes.user_name : await TwitterService.getUsernameById(data.author_id),
               idRelatedMessage: data.referenced_tweets ? data.referenced_tweets[0].id : undefined,
-              monitoredId: monitored.id,
+              monitoredId: monitored.$attributes.id,
 
 
             }
             const postSchema = schema.create({
-              message: schema.string({}, [rules.required()]),
+              text: schema.string({}, [rules.required()]),
               authorName: schema.string({}, [rules.required()]),
               idConversation: schema.number([rules.required()]),
-              idMessage: schema.number([rules.required()]),
+              externalId: schema.number([rules.required()]),
               idAuthor: schema.number([rules.required()]),
               monitoredId: schema.number([rules.required()]),
 
             })
             const messages = {
-              'message.required': 'Mensagem sem texto',
+              'text.required': 'Mensagem sem texto',
               'monitoredId.required': 'Mensagem sem monitorado associado',
               'idConversation.required': 'Mensagem sem id_conversation',
-              'idMessage.required': 'Mensagem sem id',
+              'externalId.required': 'Mensagem sem id',
               'idAuthor.required': 'Mensagem sem id do autor',
             }
             try {
@@ -161,8 +242,19 @@ class MonitoredService {
 
             }
           }
-          await Message.updateOrCreateMany('idMessage', tweetList)
-          await Monitored.query().where('id', monitored.id).update({ 'last_message_id': meta.newest_id })
+          const teste = await Message.updateOrCreateMany('externalId', tweetList)
+          teste.forEach((item) => {
+            monitored.user.map(async (u) =>
+            await item.related('users').sync({
+              [u.id]: {
+                alert: true,
+                checked: false
+              }
+            }, false)
+
+            )
+          })
+          await Monitored.query().where('id', monitored.$attributes.id).update({ 'last_message_id': meta.newest_id })
           tweetList = []
         }
       }

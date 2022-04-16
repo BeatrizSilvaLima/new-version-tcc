@@ -59,8 +59,21 @@
                                     <tbody class="bg-white">
                                         @each(message in row.messages)
                                         <tr> 
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" colspan="3"> {{ message.message }} </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" colspan="1"> </td>
+                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" colspan="3"> {{ message.text }} </td>
+                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" colspan="1">
+
+                                                <form name= "checkMessage" id= "check{{message.id}}{{row.userName}}" action="{{ route('check') }}" class="flex pr-4">
+                                                    {{ csrfField() }}
+                                                    <input name="messageId" type="hidden" value="{{message.id}}">
+                                                    <button title="Check" class="text-gray-950 hover:text-brand-800 mr-3"
+                                                      aria-label="Delete" type="submit" form="check{{message.id}}{{row.userName}}" formmethod="post"
+                                                    >
+                                                    @!svg.trash()
+                                                    </button>
+                                                  <!--  <button type="submit" form="{{idForm}}" class="bg-red-400 pr-1 pl-1 border-red-700 border-solid" formmethod="post">Unfollow</button>-->
+                                                  </form>
+
+                                             </td>
                                         </tr>
                                     @endeach
 

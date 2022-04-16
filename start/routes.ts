@@ -62,3 +62,7 @@ Route.group(() => {
 Route.get('/dashboard', 'AuthController.testeResponse').as('dashboard').middleware('auth:web')
 
 Route.post('/dashboard', 'MonitoredsController.store').middleware('auth:web')
+
+Route.post('/unfollow', 'MonitoredsController.forgetFollow').as('unfollow').middleware('auth:web')
+
+Route.post('/check', 'MonitoredsController.checkMessage').as('check').middleware('auth:web')

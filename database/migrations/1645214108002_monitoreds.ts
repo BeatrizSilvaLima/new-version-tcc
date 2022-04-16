@@ -8,11 +8,9 @@ export default class Monitoreds extends BaseSchema {
       table.bigIncrements('id').primary()
       table.boolean('active').notNullable().defaultTo(true)
       table.string('social_media').notNullable()
-      table.bigInteger('monitored_id').notNullable()
+      table.bigInteger('external_id').notNullable()
       table.bigInteger('last_message_id').nullable()
       table.string('user_name').notNullable()
-      table.bigInteger('monitor_id').references('id').inTable('users').notNullable()
-      table.json('filter')
       table.timestamp('deleted_at', { useTz: true }).nullable()
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL

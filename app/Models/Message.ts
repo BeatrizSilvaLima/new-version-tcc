@@ -1,16 +1,11 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Monitored from 'App/Models/Monitored'
+import User from './User'
 
 export default class Message extends BaseModel {
   @column({ isPrimary: true })
   public id: number
-
-  @column.dateTime({ autoCreate: true })
-  public readAt: DateTime
-
-  @column()
-  public alert: boolean
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
@@ -19,7 +14,7 @@ export default class Message extends BaseModel {
   public createdAt: DateTime
 
   @column()
-  public message: string
+  public text: string
 
   @column({ columnName: 'id_conversation' })
   public idConversation: number
@@ -27,8 +22,8 @@ export default class Message extends BaseModel {
   @column({ columnName: 'id_related_message' })
   public idRelatedMessage: number
 
-  @column({ columnName: 'id_message' })
-  public idMessage: number
+  @column({ columnName: 'external_id' })
+  public externalId: number
 
   @column({ columnName: 'id_author' })
   public idAuthor: number
@@ -43,7 +38,14 @@ export default class Message extends BaseModel {
   public monitoredId: number
 
   @belongsTo(() => Monitored, {
-    localKey: 'monitoredId'
+    localKey: 'id'
   })
   public monitoreds: BelongsTo<typeof Monitored>
+
+  @manyToMany(() => User, {
+    pivotTable: 'users_messages',
+    pivotColumns: ['alert', 'checked'],
+    pivotTimestamps: true
+  })
+  public users: ManyToMany<typeof User>
 }

@@ -19,11 +19,11 @@ class TwitterService {
 
     const client = new Twitter({bearer_token: Env.get('BEARER_TOKEN').toString()})
     const urlParams = {
-      query: 'from:' + monitored.user_name.toString() + ' OR to:' + monitored.user_name.toString(),
+      query: 'from:' + monitored.userName.toString() + ' OR to:' + monitored.userName.toString(),
       tweet:{
         fields: 'author_id,conversation_id,created_at,in_reply_to_user_id,referenced_tweets'
         },
-      since_id: (monitored.last_message_id ? monitored.last_message_id.toString() : null),
+      since_id: (monitored.lastMessageId ? monitored.lastMessageId.toString() : null),
     }
     const path = 'tweets/search/recent'
     const tweets:any = await client.get(path, urlParams)

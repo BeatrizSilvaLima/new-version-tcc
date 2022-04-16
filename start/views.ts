@@ -10,7 +10,7 @@
 
 import View from '@ioc:Adonis/Core/View'
 
-View.global('projectName', 'Capivara SaaS')
+View.global('projectName', 'Nome do Projeto')
 
 View.global('menu', [
   {
@@ -29,20 +29,6 @@ View.global('menu', [
       {
         url: 'applications.index',
         text: 'Aplicações',
-      },
-    ],
-  },
-  {
-    text: 'Habilidades',
-    icon: 'components/svg/sparkles',
-    options: [
-      {
-        url: 'skills.index',
-        text: 'Consultar',
-      },
-      {
-        url: 'skills.create',
-        text: 'Criar',
       },
     ],
   },

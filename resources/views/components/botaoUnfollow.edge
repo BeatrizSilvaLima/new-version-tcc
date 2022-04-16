@@ -1,0 +1,11 @@
+<form name= "unfollowUser" id= "{{idForm}}" action="{{ route('unfollow') }}" class="flex pr-4">
+  {{ csrfField() }}
+  <input name="userName" type="hidden" value="{{userName}}">
+  <input name="monitoredId" type="hidden" value="{{monitoredId}}">
+  <button title="Unfollow" class="text-gray-950 hover:text-brand-800 mr-3"
+    aria-label="Delete" type="submit" form="{{idForm}}" formmethod="post"
+  >
+  @!svg.trash()
+  </button>
+<!--  <button type="submit" form="{{idForm}}" class="bg-red-400 pr-1 pl-1 border-red-700 border-solid" formmethod="post">Unfollow</button>-->
+</form>

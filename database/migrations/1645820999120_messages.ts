@@ -6,12 +6,10 @@ export default class Messages extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.bigIncrements('id').primary()
-      table.boolean('alert').notNullable().defaultTo(false)
-      table.boolean('status').notNullable().defaultTo(false)
-      table.text('message').notNullable()
+      table.text('text').notNullable()
       table.bigInteger('id_conversation').notNullable()
       table.bigInteger('id_related_message').nullable()
-      table.bigInteger('id_message').notNullable()
+      table.bigInteger('external_id').notNullable()
       table.bigInteger('id_author').notNullable()
       table.string('author_name').notNullable()
       table.string('url', 240).nullable()

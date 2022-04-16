@@ -11,9 +11,8 @@ export default class AuthController {
 
   //Para abrir a pagina inicial depois de logado
   public async testeResponse({ view, auth }: HttpContextContract) {
-    //let followedList = await MonitoredService.getFollow({ auth })
-    const followedList = await MonitoredService.refreshTweets({auth})
-    view.share({ followedList: followedList})
+   const followedList = await MonitoredService.refreshTweets({auth})
+   view.share({ followedList: followedList})
     return view.render('dashboard')
   }
 

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, HasMany, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 import Message from 'App/Models/Message'
 
@@ -7,14 +7,11 @@ export default class Monitored extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column({ columnName: 'monitored_id' })
-  public monitoredId: number
+  @column({ columnName: 'external_id' })
+  public externalId: number
 
   @column({ columnName: 'last_message_id' })
   public lastMessageId: number
-
-  @column({ columnName: 'monitor_id' })
-  public monitorId: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -25,19 +22,18 @@ export default class Monitored extends BaseModel {
   @column.dateTime()
   public deletedAt: DateTime
 
-  @column()
-  public active: boolean
-
   @column({ columnName: 'user_name' })
   public userName: string
 
   @column({ columnName: 'social_media' })
   public socialMedia: string
 
-  @belongsTo(() => User, {
-    localKey: 'monitorId',
+  @manyToMany(() => User, {
+    pivotTable: 'users_monitoreds',
+    pivotColumns: ['active', 'filter'],
+    pivotTimestamps: true
   })
-  public user: BelongsTo<typeof User>
+  public user: ManyToMany<typeof User>
 
   @hasMany(() => Message, {
     foreignKey: 'monitoredId'

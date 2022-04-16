@@ -1,7 +1,8 @@
-import { BaseModel, beforeSave, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeSave, column, HasManyThrough, hasManyThrough, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { DateTime } from 'luxon'
 import Monitored from 'App/Models/Monitored'
+import Message from './Message'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -34,10 +35,19 @@ export default class User extends BaseModel {
   @column({ columnName: 'remember_me_token' })
   public rememberMeToken: string
 
-  @hasMany(() => Monitored, {
-    foreignKey: 'monitorId',
+  @manyToMany(() => Monitored, {
+    pivotTable: 'users_monitoreds',
+    pivotColumns: ['active', 'filter'],
+    pivotTimestamps: true
   })
-  public tasks: HasMany<typeof Monitored>
+  public tasks: ManyToMany<typeof Monitored>
+
+  @manyToMany(() => Message, {
+    pivotTable: 'users_messages',
+    pivotColumns: ['alert', 'checked'],
+    pivotTimestamps: true
+  })
+  public messages: ManyToMany<typeof Message>
 
   @beforeSave()
   public static async hashPassword(user: User) {

@@ -10,13 +10,18 @@ export default class MonitoredsController {
     request.all().socialMedia = 'twitter'
     request.all().active = true
     await request.validate(MonitoredValidator)
-    console.log(request)
-    await MonitoredService.postFollow({ request, session })
+    await MonitoredService.postFollow({ request, session, auth })
     return response.redirect('back')
   }
 
   public async forgetFollow({request, response, auth}: HttpContextContract){
     await MonitoredService.stopFollow( { request, auth})
+    //console.log(request.all())
+    return response.redirect('back')
+  }
+
+  public async checkMessage({request, response, auth}: HttpContextContract){
+    await MonitoredService.checkMessages( { request, auth})
     //console.log(request.all())
     return response.redirect('back')
   }
