@@ -10,7 +10,7 @@
 
 import View from '@ioc:Adonis/Core/View'
 
-View.global('projectName', 'Nome do Projeto')
+View.global('projectName', 'Monitorages')
 
 View.global('menu', [
   {

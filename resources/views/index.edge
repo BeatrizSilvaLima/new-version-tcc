@@ -9,13 +9,19 @@
         <div class="pl-4 flex items-center">
           <a class="toggleColour text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl" href="#">
             <!--Icon from: http://www.potlabicons.com/ -->
-            <svg class="h-8 fill-current inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.005 512.005">
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
+                d="M16.5 3.5a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2l-2.999-.001l-2.294 2.294a1 1 0 0 1-1.32.083l-.094-.083l-2.294-2.294L4.5 17.5a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2z"/>
+              <path fill="currentColor" 
+                d="M10.499 11.5c.5 0 1-.5 1-1s-.5-1-1-1s-.999.5-.999 1s.499 1 .999 1zm-4 0c.5 0 1-.5 1-1s-.5-1-1-1s-.999.5-.999 1s.499 1 .999 1zm8 0c.5 0 1-.5 1-1s-.5-1-1-1s-.999.5-.999 1s.499 1 .999 1z"/></g>
+            </svg> -->
+            <!-- <svg class="h-8 fill-current inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.005 512.005">
               <rect fill="#2a2a31" x="16.539" y="425.626" width="479.767" height="50.502" transform="matrix(1,0,0,1,0,0)" />
               <path
-                class="plane-take-off"
+                class="message-writing"
                 d=" M 510.7 189.151 C 505.271 168.95 484.565 156.956 464.365 162.385 L 330.156 198.367 L 155.924 35.878 L 107.19 49.008 L 211.729 230.183 L 86.232 263.767 L 36.614 224.754 L 0 234.603 L 45.957 314.27 L 65.274 347.727 L 105.802 336.869 L 240.011 300.886 L 349.726 271.469 L 483.935 235.486 C 504.134 230.057 516.129 209.352 510.7 189.151 Z "
               />
-            </svg>
+            </svg> -->
             {{ projectName }}
           </a>
         </div>
@@ -31,11 +37,6 @@
           <ul class="toggleColour text-white list-reset lg:flex justify-end flex-1 items-center">
             <li class="mr-3">
               <a class="inline-block no-underline text-gray-800 focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out hover:text-underline py-2 px-4 font-bold" href="#">
-                Documentação
-              </a>
-            </li>
-            <li class="mr-3">
-              <a class="inline-block no-underline text-gray-800 focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out hover:text-underline py-2 px-4 font-bold" href="#">
                 Sobre
               </a>
             </li>
@@ -46,7 +47,7 @@
             hreaf="/index"
           >
             <a href="{{ route('dashboard') }}">
-              Entrar
+              Login
             </a>
           </button>
         </div>
@@ -57,23 +58,23 @@
     <div class="pt-24">
       <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
         <!--Left Col-->
+        <div class="w-full md:w-3/5 py-1 text-center">
+          <img class="w-full md:w-4/5 z-50" src="{{ asset('assets/images/hero.svg') }}" />
+        </div>
+        <!--Right Col-->
         <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
-          <p class="uppercase tracking-loose w-full">APIs de Inteligência Artificial</p>
+          <p class="uppercase tracking-loose w-full">Monitoramentos</p>
           <h1 class="my-4 text-5xl font-bold leading-tight">
-            Facilitando o uso da Inteligência Artificial!
+            Facilitando o monitoramento de redes sociais.
           </h1>
           <p class="leading-normal text-2xl mb-8">
-            Maior foco na resolução do problema. Deixando a parte da Inteligência Artificial conosco!
+            Não gaste tempo analizando mensagens uma a uma. Com um simples clique tenha acesso a um resumo das mensagens com ou sem alertas.
           </p>
           <button class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
             <a href="{{ route('users.create') }}">
-              Requisitar Acesso
+              Registrar-se
             </a>
           </button>
-        </div>
-        <!--Right Col-->
-        <div class="w-full md:w-3/5 py-6 text-center">
-          <img class="w-full md:w-4/5 z-50" src="{{ asset('assets/images/hero.svg') }}" />
         </div>
       </div>
     </div>
@@ -99,7 +100,7 @@
     <section class="bg-white border-b py-8">
       <div class="container max-w-5xl mx-auto m-8">
         <h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
-          Inteligência Artificial
+          Monitoramentos:
         </h1>
         <div class="w-full mb-4">
           <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
@@ -142,7 +143,7 @@
         <div class="w-full mb-4">
           <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
         </div>
-        <div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
+        <!--<div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
           <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow">
             <a href="#" class="flex flex-wrap no-underline hover:no-underline">
               <p class="w-full text-gray-600 text-xs md:text-sm px-6">
@@ -163,8 +164,8 @@
               </button>
             </div>
           </div>
-        </div>
-        <div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
+        </div> -->
+        <!--<div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
           <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow">
             <a href="#" class="flex flex-wrap no-underline hover:no-underline">
               <p class="w-full text-gray-600 text-xs md:text-sm px-6">
@@ -185,8 +186,8 @@
               </button>
             </div>
           </div>
-        </div>
-        <div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
+        </div> -->
+        <!--<div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
           <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow">
             <a href="#" class="flex flex-wrap no-underline hover:no-underline">
               <p class="w-full text-gray-600 text-xs md:text-sm px-6">
@@ -207,7 +208,7 @@
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </section>
     <!-- Change the colour #f8fafc to match the previous section colour -->
@@ -234,17 +235,17 @@
     </svg>
     <section class="container mx-auto text-center py-6 mb-12">
       <h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-white">
-        Faça sua requisição
+        Comece a monitorar agora!
       </h1>
       <div class="w-full mb-4">
         <div class="h-1 mx-auto bg-white w-1/6 opacity-25 my-0 py-0 rounded-t"></div>
       </div>
       <h3 class="my-4 text-3xl leading-tight">
-        A aprovação dependerá do objetivo do seu uso
+        Faça cadastro para começar a monitorar diversos usuários de famosas redes sociais.
       </h3>
       <button class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
         <a href="{{ route('users.create') }}">
-          Requisitar Acesso
+          Sign Up
         </a>
       </button>
     </section>
@@ -262,7 +263,7 @@
                   d=" M 510.7 189.151 C 505.271 168.95 484.565 156.956 464.365 162.385 L 330.156 198.367 L 155.924 35.878 L 107.19 49.008 L 211.729 230.183 L 86.232 263.767 L 36.614 224.754 L 0 234.603 L 45.957 314.27 L 65.274 347.727 L 105.802 336.869 L 240.011 300.886 L 349.726 271.469 L 483.935 235.486 C 504.134 230.057 516.129 209.352 510.7 189.151 Z "
                 />
               </svg>
-              ATISLabs
+              Monitorages
             </a>
           </div>
           <div class="flex-1">
@@ -321,7 +322,7 @@
 @section('style')
   <style>
     .gradient {
-      background: linear-gradient(90deg, #ac94fa 0%, #9061f9 100%);
+      background: linear-gradient(90deg, #02b087 0%, #97bfb6 100%);
     }
   </style>
 @endsection
